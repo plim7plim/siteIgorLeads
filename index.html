@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BLU | BI Gerencial</title>
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
+<link rel="stylesheet" href="./styles.css">
+<script src="./app.js" defer></script>
+</head>
+<body><main class="shell">
+<header class="top">
+ <div class="brand"><div class="mark">A</div><div><div class="eyebrow">BLU • Inteligência comercial</div><h1>Painel gerencial</h1></div></div>
+ <div class="meta" role="status"><span id="sync-status" class="status">● DEMONSTRATIVO</span><span id="sync-date" class="date">Posição da carteira · 17 nov 2026</span></div>
+</header>
+<nav class="tabs" aria-label="Seções do BI">
+ <button class="tab active" data-tab="overview">Visão geral</button>
+ <button class="tab" data-tab="seller">Compra de dívida</button>
+<button class="tab" data-tab="cpmercantil">CP Mercantil</button>
+
+</nav>
+<div id="overview">
+<div class="toolbar"><p>Produção, andamento financeiro e distribuição da esteira</p><div class="filters">
+ <select id="stageFilter" aria-label="Filtrar etapa"><option value="all">Todas as etapas</option></select>
+ <input id="search" placeholder="Pesquisar etapa" aria-label="Pesquisar etapa">
+</div></div>
+<section class="kpis">
+ <article class="kpi n"><div class="kpi-head"><span class="kpi-label">Propostas na carteira</span><span class="kpi-icon">▤</span></div><strong>38</strong><small>Volume total de operações</small></article>
+ <article class="kpi y"><div class="kpi-head"><span class="kpi-label">Produção total</span><span class="kpi-icon">R$</span></div><strong>R$ 442.608,31</strong><small>Valor total da carteira analisada</small></article>
+ <article class="kpi t"><div class="kpi-head"><span class="kpi-label">Boleto + liquidação</span><span class="kpi-icon">↗</span></div><strong>R$ 365.509,19</strong><small>30 propostas · 82,6% do valor</small></article>
+ <article class="kpi g"><div class="kpi-head"><span class="kpi-label">Pagos</span><span class="kpi-icon">✓</span></div><strong>R$ 182.215,66</strong><small>Indicador financeiro informado</small></article>
+</section>
+<div class="section-label">Acompanhamento da carteira</div><section class="layout">
+ <article class="panel"><div class="panel-head"><div><h2>Valor por etapa da esteira</h2><div class="panel-sub">Participação de cada etapa no valor total</div></div><span class="legend">VALORES EM R$</span></div><div id="bars" class="bar-list"></div></article>
+ <article class="panel"><div class="panel-head"><div><h2>Visão rápida da carteira</h2><div class="panel-sub">Concentração nas principais etapas</div></div></div>
+  <div class="side-stats"><div class="stat"><b>17</b><span>Aguardando liquidação</span></div><div class="stat"><b>13</b><span>Aguardando boleto</span></div><div class="stat"><b>30</b><span>Propostas nessas duas etapas</span></div><div class="stat"><b>82,6%</b><span>Do valor concentrado nessas etapas</span></div></div>
+  <div class="callout"><strong>Indicador de pagos</strong><p>R$ 182.215,66 exibidos separadamente, sem somar novamente à produção total.</p></div>
+ </article>
+</section>
+<div class="section-label">Visão operacional detalhada</div><section class="panel detail"><div class="panel-head"><div><h2>Detalhamento operacional</h2><div class="panel-sub">Quantidade de propostas e valor por situação</div></div><span class="pill">7 etapas</span></div>
+ <div class="table-wrap"><table class="table"><thead><tr><th>Etapa</th><th>Propostas</th><th>Valor</th><th>Participação</th></tr></thead><tbody id="rows"></tbody></table></div>
+</section>
+
+</div>
+<section id="seller" class="seller-view" hidden>
+ <div class="toolbar"><p id="seller-source" role="status">Sou+BLU · Aguardando conexão</p>
+  <a id="seller-server-link" href="http://127.0.0.1:3000/#seller" hidden>Abrir o painel conectado ao Sou+BLU</a>
+ </div>
+ <section class="panel company-goals" aria-labelledby="company-goals-title">
+  <div class="panel-head">
+   <div><h2 id="company-goals-title">Metas de produção</h2><p class="panel-sub">Compra de dívida · Produção por data de cadastro</p><p id="goal-tv-sync" class="panel-sub goal-tv-only" hidden></p></div>
+   <div class="goal-controls">
+    <label class="goal-scope">Acompanhar metas de <select id="goal-scope"><option value="">Empresa inteira</option></select></label>
+    <div class="goal-tv-nav goal-tv-only" hidden>
+     <button type="button" id="goal-tv-prev" aria-label="Pessoa anterior">←</button>
+     <button type="button" id="goal-tv-next" aria-label="Próxima pessoa">→</button>
+    </div>
+    <button type="button" id="goal-tv-toggle" class="goal-tv-button" aria-pressed="false">Modo TV</button>
+   </div>
+  </div>
+  <div class="goal-views" role="group" aria-label="Visualização das metas">
+   <button type="button" data-goal-view="summary" aria-pressed="true" aria-controls="goal-cards">Resumo</button>
+   <button type="button" data-goal-view="trend" aria-pressed="false" aria-controls="goal-trend">Evolução mensal</button>
+   <button type="button" data-goal-view="ranking" aria-pressed="false" aria-controls="goal-ranking">Ranking de metas</button>
+  </div>
+  <div id="goal-cards" class="goal-cards"><p class="panel-sub">Aguardando produção do Sou+BLU.</p></div>
+  <section id="goal-trend" class="goal-analysis" hidden aria-labelledby="goal-trend-title">
+   <h3 id="goal-trend-title">Produção acumulada no mês</h3>
+   <p id="goal-trend-note" class="panel-sub"></p>
+   <canvas id="goal-trend-chart" role="img" aria-label="Gráfico de produção acumulada no mês"></canvas>
+   <div class="goal-chart-legend" id="goal-chart-legend"><span>Produção acumulada</span><span>Ritmo planejado</span><span>Meta mensal</span></div>
+  </section>
+  <section id="goal-ranking" class="goal-analysis" hidden aria-labelledby="goal-ranking-title">
+   <h3 id="goal-ranking-title">Atingimento da meta mensal por vendedor</h3>
+   <p class="panel-sub">Vendedores com meta mensal definida. Selecione um nome para abrir o resumo individual.</p>
+   <div id="goal-ranking-rows" class="goal-ranking-rows"></div>
+  </section>
+  <details id="goal-settings">
+   <summary>Editar metas</summary>
+   <form id="goal-form">
+    <div class="goal-field"><label>Meta semanal (R$)<input name="weekly" type="number" min="0" max="9999999999" step="0.01" placeholder="0,00"></label><button type="button" data-remove-goal="weekly" disabled>Excluir meta semanal</button></div>
+    <div class="goal-field"><label>Meta mensal (R$)<input name="monthly" type="number" min="0" max="9999999999" step="0.01" placeholder="0,00"></label><button type="button" data-remove-goal="monthly" disabled>Excluir meta mensal</button></div>
+    <button type="submit" disabled>Salvar metas</button>
+   </form>
+  </details>
+  <div id="goal-message" class="panel-sub" role="status"></div>
+ </section>
+ <form id="seller-filters" class="panel seller-filters">
+  <div class="seller-filter-grid">
+   <label>Filtrar por data de<select name="date"><option value="created">Cadastro</option><option value="entered">Digitação</option><option value="paidDate">Pagamento</option></select></label>
+   <label>Período da consulta<select id="seller-period"><option value="all">Todas as datas</option><option value="today">Hoje</option><option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option><option value="month">Mês atual</option><option value="custom">Intervalo personalizado</option></select></label>
+   <label>Data inicial<input name="start" type="date"></label>
+   <label>Data final<input name="end" type="date"></label>
+   <label>Vendedor responsável<select name="seller" data-dimension></select></label>
+   <label>Buscar por nome<input name="person" type="search" placeholder="Nome do vendedor ou cliente"></label>
+   <label>Status da proposta<select name="status" data-dimension></select></label>
+  </div>
+  <details>
+   <summary>Mais filtros</summary>
+   <div class="seller-filter-grid">
+    <label>Status operacional<select name="operationStatus" data-dimension></select></label>
+    <label>Convênio<select name="agreement" data-dimension></select></label>
+    <label>Órgão do convênio<select name="agency" data-dimension></select></label>
+    <label>Banco de digitação<select name="entryBank" data-dimension></select></label>
+    <label>Banco da compra<select name="purchaseBank" data-dimension></select></label>
+    <label>Situação do pagamento<select name="payment"><option value="">Todas as situações</option><option value="paid">Propostas pagas</option><option value="unpaid">Propostas não pagas</option></select></label>
+    <label>Valor mínimo (R$)<input name="min" type="number" min="0" step="0.01"></label>
+    <label>Valor máximo (R$)<input name="max" type="number" min="0" step="0.01"></label>
+   </div>
+  </details>
+  <div class="seller-filter-actions">
+   <div id="seller-exports" class="seller-exports" hidden aria-label="Relatórios dos filtros aplicados">
+    <a data-seller-report="propostas" download>Baixar propostas (CSV)</a>
+    <a data-seller-report="vendedores" download>Baixar resumo por vendedor (CSV)</a>
+   </div>
+   <button type="reset">Limpar filtros</button><button type="submit">Aplicar filtros</button>
+  </div>
+ </form>
+ <div class="kpis">
+  <article class="kpi n"><div class="kpi-head"><span class="kpi-label">Vendedores ativos</span><span class="kpi-icon">♙</span></div><strong>—</strong><small>Vendedores identificados na esteira</small></article>
+  <article class="kpi y"><div class="kpi-head"><span class="kpi-label">Produção total</span><span class="kpi-icon">R$</span></div><strong>—</strong><small>Soma do valor final das propostas</small></article>
+  <article class="kpi t"><div class="kpi-head"><span class="kpi-label">Total de propostas</span><span class="kpi-icon">▤</span></div><strong>—</strong><small>Quantidade de operações</small></article>
+  <article class="kpi g"><div class="kpi-head"><span class="kpi-label">Ticket médio</span><span class="kpi-icon">↗</span></div><strong>—</strong><small>Produção dividida por propostas</small></article>
+  <article class="kpi t"><div class="kpi-head"><span class="kpi-label">Propostas pagas</span><span class="kpi-icon">✓</span></div><strong>—</strong><small>Valor final das propostas pagas</small></article>
+ </div>
+ <div class="section-label">Análise da carteira</div>
+ <section class="panel seller-timeline">
+  <div class="panel-head">
+   <div><h2>Evolução das propostas</h2><p id="seller-timeline-note" class="panel-sub"></p></div>
+   <label class="chart-metric">Exibir <select id="seller-chart-metric"><option value="count">Quantidade de propostas</option><option value="value">Valor da produção</option></select></label>
+  </div>
+  <div id="seller-timeline" class="chart-scroll" tabindex="0" role="region" aria-label="Evolução das propostas"><p class="panel-sub">Aguardando dados do Sou+BLU.</p></div>
+ </section>
+ <div class="layout seller-charts">
+  <section class="panel"><div class="panel-head"><h2>Propostas por status</h2></div><div id="seller-status-chart" class="chart-bars" tabindex="0" role="region" aria-label="Propostas por status"></div></section>
+  <section class="panel"><div class="panel-head"><h2>Propostas por convênio</h2></div><div id="seller-agreement-chart" class="chart-bars" tabindex="0" role="region" aria-label="Propostas por convênio"></div></section>
+ </div>
+ <div class="section-label">Performance comercial</div>
+ <div class="layout">
+  <article class="panel"><div class="panel-head"><div><h2>Ranking de produção</h2><div class="panel-sub">Classificação por valor produzido</div></div><span class="legend">RANKING</span></div>
+   <div id="seller-ranking" class="bar-list"><p class="panel-sub">Aguardando dados do Sou+BLU.</p></div>
+  </article>
+  <article class="panel"><div class="panel-head"><div><h2>Indicadores de produtividade</h2><div class="panel-sub">Métricas individuais e comparativas</div></div></div>
+   <div class="side-stats">
+    <div class="stat"><b>—</b><span>Maior produção individual</span></div>
+    <div class="stat"><b>—</b><span>Maior volume de propostas</span></div>
+    <div class="stat"><b>—</b><span>Ticket médio geral</span></div>
+    <div class="stat"><b>—</b><span>Participação na produção total</span></div>
+   </div>
+   <div class="callout"><div class="callout-icon">i</div><div><strong>Critérios do painel</strong><p>A produção soma o valor final das propostas e usa o valor original quando o final está ausente.</p></div></div>
+  </article>
+ </div>
+ <div class="section-label">Detalhamento por vendedor</div>
+ <section class="panel detail"><div class="panel-head"><div><h2>Desempenho individual</h2><div class="panel-sub">Tabela comparativa por vendedor</div></div><span class="pill" id="seller-count">—</span></div>
+  <div class="table-wrap"><table class="table"><thead><tr><th>Posição</th><th>Vendedor</th><th>Propostas</th><th>Produção</th><th>Ticket médio</th><th>% da produção</th><th>Pagas</th><th>Valor pago</th></tr></thead><tbody id="seller-rows"><tr><td colspan="8">Aguardando dados do Sou+BLU.</td></tr></tbody></table></div>
+ </section>
+
+</section>
+
+</section>
+<div class="footer"><span>BLU · Painel gerencial de produção e conversão</span><span id="sync-note">Prévia com dados demonstrativos</span></div>
+
+<section id="cpmercantil" class="seller-view" hidden>
+ <div class="toolbar">
+  <div><h2>CP Mercantil</h2><p id="cp-source" role="status">Sou+BLU · Aguardando Gestão de Crédito</p></div>
+ </div>
+ <form id="cp-filters" class="panel seller-filters">
+  <div class="seller-filter-grid">
+   <label>Filtrar por data de<select name="date"><option value="created">Cadastro</option><option value="entered">Digitação</option><option value="paidDate">Pagamento</option></select></label>
+   <label>Data inicial<input name="start" type="date"></label>
+   <label>Data final<input name="end" type="date"></label>
+   <label>Vendedor<select name="seller"></select></label>
+   <label>Status<select name="status"></select></label>
+   <label>Buscar por nome<input name="person" type="search" placeholder="Vendedor ou cliente"></label>
+  </div>
+  <div class="seller-filter-actions">
+   <div id="cp-exports" class="seller-exports" hidden><a data-cp-report="propostas" download>Baixar propostas (CSV)</a><a data-cp-report="vendedores" download>Baixar resumo por vendedor (CSV)</a></div>
+   <button type="reset">Limpar filtros</button><button type="submit">Aplicar filtros</button>
+  </div>
+ </form>
+ <div class="kpis">
+  <article class="kpi n"><div class="kpi-head"><span class="kpi-label">Total de propostas</span><span class="kpi-icon">▤</span></div><strong>—</strong><small>Propostas no recorte selecionado</small></article>
+  <article class="kpi g"><div class="kpi-head"><span class="kpi-label">Produção total</span><span class="kpi-icon">R$</span></div><strong>—</strong><small>Soma do valor final das propostas</small></article>
+  <article class="kpi t"><div class="kpi-head"><span class="kpi-label">Propostas pagas</span><span class="kpi-icon">✓</span></div><strong>—</strong><small id="cp-paid-value">Valor das propostas pagas</small></article>
+ </div>
+ <div class="panel">
+  <div class="panel-head"><div><span class="eyebrow">DESEMPENHO INDIVIDUAL</span><h3>Indicadores por vendedor</h3></div></div>
+  <div class="table-wrap"><table class="table"><thead><tr><th>Vendedor</th><th>Propostas</th><th>Produção</th><th>Pagas</th><th>Valor pago</th></tr></thead><tbody id="cp-rows"><tr><td colspan="5">Aguardando dados da Gestão de Crédito.</td></tr></tbody></table></div>
+ </div>
+</section>
+<dialog id="proposal-dialog" class="proposal-dialog" aria-labelledby="proposal-title">
+ <div class="panel-head">
+  <div><h2 id="proposal-title">Propostas do vendedor</h2><p id="proposal-summary" class="panel-sub" role="status"></p></div>
+  <form method="dialog"><button type="submit">Fechar</button></form>
+ </div>
+ <div class="table-wrap"><table class="table"><thead><tr><th>Nº da proposta</th><th>Vendedor</th><th>Status</th><th>Cadastro</th><th>Digitação</th><th>Pagamento</th><th>Valor original</th><th>Valor na produção</th></tr></thead><tbody id="proposal-rows"></tbody></table></div>
+</dialog>
+</main>
+</body></html>

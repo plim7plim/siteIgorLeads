@@ -1,0 +1,16 @@
+{$PANEL_DOMAIN} {
+	basic_auth {
+		{$PANEL_USER} {$PANEL_PASSWORD_HASH}
+	}
+
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+		X-Frame-Options DENY
+	}
+
+	encode gzip
+	reverse_proxy painel:3000 {
+		header_up -Authorization
+	}
+}

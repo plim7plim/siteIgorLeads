@@ -1,0 +1,43 @@
+services:
+  painel:
+    build: .
+    restart: unless-stopped
+    init: true
+    environment:
+      SOUMAISBLU_API_KEY: "${SOUMAISBLU_API_KEY:?Configure a chave do Sou+BLU}"
+      KONSIG_API_URL: "${KONSIG_API_URL:-}"
+      KONSIG_API_TOKEN: "${KONSIG_API_TOKEN:-}"
+      SYNC_INTERVAL_MS: "${SYNC_INTERVAL_MS:-300000}"
+      PANEL_ORIGIN: "https://${PANEL_DOMAIN:?Configure o domínio do painel}"
+      GOALS_DB_FILE: /data/goals.sqlite
+      GOALS_FILE: /data/metas-legado.json
+    volumes:
+      - metas:/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      painel:
+        condition: service_healthy
+    environment:
+      PANEL_DOMAIN: "${PANEL_DOMAIN:?Configure o domínio do painel}"
+      PANEL_USER: "${PANEL_USER:?Configure o usuário do painel}"
+      PANEL_PASSWORD_HASH: "${PANEL_PASSWORD_HASH:?Configure o hash da senha}"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  metas:
+  caddy_data:
+  caddy_config:
