@@ -6,6 +6,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
 <link rel="stylesheet" href="./styles.css">
 <script src="./app.js" defer></script>
+<script src="./brazil-map.js" defer></script>
 </head>
 <body><main class="shell">
 <header class="top">
@@ -28,6 +29,24 @@
  <article class="kpi y"><div class="kpi-head"><span class="kpi-label">Produção total</span><span class="kpi-icon">R$</span></div><strong>R$ 442.608,31</strong><small>Valor total da carteira analisada</small></article>
  <article class="kpi t"><div class="kpi-head"><span class="kpi-label">Boleto + liquidação</span><span class="kpi-icon">↗</span></div><strong>R$ 365.509,19</strong><small>30 propostas · 82,6% do valor</small></article>
  <article class="kpi g"><div class="kpi-head"><span class="kpi-label">Pagos</span><span class="kpi-icon">✓</span></div><strong>R$ 182.215,66</strong><small>Indicador financeiro informado</small></article>
+</section>
+<section class="panel brazil-map-panel" aria-labelledby="brazil-map-title">
+ <div class="panel-head">
+  <div><h2 id="brazil-map-title">Propostas por estado</h2><p class="panel-sub">Carteira do Sou+BLU · UF do convênio ou órgão da proposta</p></div>
+ </div>
+ <div class="brazil-map-layout">
+  <div class="brazil-map-surface">
+   <canvas id="brazil-map" role="img" aria-label="Mapa de concentração de propostas por UF. Use o seletor de estado para consultar os valores pelo teclado."></canvas>
+   <div class="brazil-map-legend"><span>Menos propostas</span><span class="brazil-map-gradient" aria-hidden="true"></span><span>Mais propostas</span></div>
+  </div>
+  <div class="brazil-map-info">
+   <label>Consultar estado<select id="brazil-map-state"><option value="">Todos os estados</option></select></label>
+   <div class="brazil-map-highlight" aria-live="polite"><span id="brazil-map-label">Brasil</span><strong id="brazil-map-count">—</strong><small>propostas</small></div>
+   <p id="brazil-map-note" class="panel-sub" role="status">Aguardando dados do Sou+BLU.</p>
+   <ol id="brazil-map-ranking" aria-label="Estados com mais propostas"></ol>
+   <a class="brazil-map-source" href="https://servicodados.ibge.gov.br/api/docs/malhas" target="_blank" rel="noopener noreferrer">Malha territorial do IBGE</a>
+  </div>
+ </div>
 </section>
 <div class="section-label">Acompanhamento da carteira</div><section class="layout">
  <article class="panel"><div class="panel-head"><div><h2>Valor por etapa da esteira</h2><div class="panel-sub">Participação de cada etapa no valor total</div></div><span class="legend">VALORES EM R$</span></div><div id="bars" class="bar-list"></div></article>

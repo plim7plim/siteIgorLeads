@@ -520,3 +520,21 @@ body.goal-tv{min-height:100vh;background:#102b4e}
  .goal-tv [data-goal-period="monthly"],.goal-tv [data-goal-period="weekly"]{grid-column:1;grid-row:auto}
  .goal-tv [data-goal-period="monthly"]{order:-1}
 }
+.brazil-map-panel{margin-top:18px}
+.brazil-map-layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(235px,1fr);gap:18px}
+.brazil-map-surface{min-width:0;padding:12px;border:1px solid #d9e8f1;border-radius:14px;background:#f1f7fb}
+#brazil-map{display:block;width:100%;height:clamp(260px,34vw,430px)}
+.brazil-map-legend{display:flex;align-items:center;justify-content:center;gap:9px;color:#445f78;font-size:11px}
+.brazil-map-gradient{width:min(33%,155px);height:8px;border-radius:999px;background:linear-gradient(90deg,#dcebf8,#104581)}
+.brazil-map-info{display:flex;flex-direction:column;gap:10px}
+.brazil-map-info label{display:grid;gap:5px;color:var(--navy);font-weight:750;font-size:12px}
+.brazil-map-info select{width:100%}
+.brazil-map-highlight{padding:11px 14px;border-radius:10px;background:#e5eff8;color:#164779}
+.brazil-map-highlight strong{display:block;font-size:clamp(23px,3vw,42px);line-height:1.05;font-variant-numeric:tabular-nums}
+.brazil-map-highlight :is(span,small){font-size:12px}
+.brazil-map-info p{margin:0}
+#brazil-map-ranking{list-style:none;padding:0;margin:0;display:grid;gap:4px}
+#brazil-map-ranking button{display:flex;justify-content:space-between;gap:8px;width:100%;padding:5px 8px;border:0;border-radius:5px;background:transparent;color:var(--navy);font:inherit;text-align:left;cursor:pointer}
+#brazil-map-ranking button:hover,#brazil-map-ranking button[aria-pressed="true"]{background:#dfedf8}
+.brazil-map-source{margin-top:auto;color:#355e80;font-size:11px}
+@media(max-width:730px){.brazil-map-layout{grid-template-columns:1fr}}

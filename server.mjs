@@ -3,6 +3,7 @@ import { createServer } from 'node:http';
 import { loadSouMaisBluProposals, loadSellerPhotos, purchaseDebtReport } from './soumaisblu.mjs';
 import { productionGoals, saveProductionGoals } from './production-goals.mjs';
 import { purchaseDebtCsv } from './reports.mjs';
+import { proposalsByState } from './brazil-regions.mjs';
 
 const { KONSIG_API_URL, KONSIG_API_TOKEN, PORT = '3000', PANEL_HOST = '127.0.0.1' } = process.env;
 const souMaisBluKey = process.env.SOUMAISBLU_API_KEY;
@@ -11,6 +12,8 @@ const assets = new Map(await Promise.all([
   ['index.html', 'text/html; charset=utf-8'],
   ['styles.css', 'text/css; charset=utf-8'],
   ['app.js', 'text/javascript; charset=utf-8'],
+  ['brazil-map.js', 'text/javascript; charset=utf-8'],
+  ['brasil-ufs.geojson', 'application/geo+json; charset=utf-8'],
   ['favicon.png', 'image/png']
 ].map(async ([name, type]) => {
   const content = await readFile(new URL(`./${name}`, import.meta.url));
@@ -86,7 +89,7 @@ async function syncSellers() {
     } catch {
       console.error('Falha ao atualizar as fotos de perfil do Sou+BLU.');
     }
-    sellerSnapshot = { proposals, credit, updatedAt: new Date().toISOString() };
+    sellerSnapshot = { proposals, credit, geography: proposalsByState(proposals), updatedAt: new Date().toISOString() };
     sellerSyncFailed = false;
   } catch {
     sellerSyncFailed = true;
@@ -128,6 +131,10 @@ createServer((request, response) => {
     response.writeHead(405, { Allow: 'GET' }).end();
   } else if (asset) {
     response.writeHead(200, { 'Content-Type': asset.type }).end(asset.content);
+  } else if (path === '/api/soumaisblu/mapa') {
+    const state = !souMaisBluKey ? 'unconfigured' : sellerSyncFailed ? 'error' : sellerSnapshot ? 'ready' : 'pending';
+    response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' })
+      .end(JSON.stringify({ state, updatedAt: sellerSnapshot?.updatedAt, ...sellerSnapshot?.geography }));
   } else if (path === '/api/soumaisblu/metas') {
     const seller = new URLSearchParams(request.url.split('?')[1]).get('seller') ?? '';
     response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' })
