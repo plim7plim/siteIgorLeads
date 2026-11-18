@@ -525,9 +525,9 @@ body.goal-tv{min-height:100vh;background:#102b4e}
 }
 .brazil-map-panel{margin-top:18px}
 .brazil-map-layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(235px,1fr);gap:18px}
-.brazil-map-surface{min-width:0;padding:12px;border:1px solid #d9e8f1;border-radius:14px;background:#f1f7fb}
+.brazil-map-surface{min-width:0;padding:12px;border:1px solid #ded5c6;border-radius:14px;background:#faf5eb}
 #brazil-map{display:block;width:100%;height:clamp(260px,34vw,430px)}
-.brazil-map-legend{display:flex;align-items:center;justify-content:center;gap:9px;color:#445f78;font-size:11px}
+.brazil-map-legend{display:flex;align-items:center;justify-content:center;gap:9px;color:#304b65;font-size:11px}
 .brazil-map-gradient{width:min(33%,155px);height:8px;border-radius:999px;background:linear-gradient(90deg,#dcebf8,#104581)}
 .brazil-map-info{display:flex;flex-direction:column;gap:10px}
 .brazil-map-info label{display:grid;gap:5px;color:var(--navy);font-weight:750;font-size:12px}

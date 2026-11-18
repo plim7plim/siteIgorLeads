@@ -15,7 +15,7 @@
  let loading=false;
 
  function color(value,maximum) {
-  if(!value) return '#e8f0f7';
+  if(!value) return '#dbe7f1';
   const ratio=.12+.88*Math.sqrt(value/maximum);
   return 'rgb('+[220,235,248].map((channel,index)=>Math.round(channel+([16,69,129][index]-channel)*ratio)).join(',')+')';
  }
@@ -29,7 +29,7 @@
   for(const shape of shapes) {
    context.fillStyle=color(counts.get(shape.uf)||0,maximum);
    context.fill(shape.path,'evenodd');
-   context.strokeStyle='#fff';
+   context.strokeStyle='#5d7892';
    context.lineWidth=1;
    context.stroke(shape.path);
   }
