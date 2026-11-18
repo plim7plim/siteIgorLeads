@@ -1,6 +1,7 @@
 (() => {
  const canvas=document.getElementById('brazil-map');
  const stateSelect=document.getElementById('brazil-map-state');
+ const statusSelect=document.getElementById('brazil-map-status');
  const label=document.getElementById('brazil-map-label');
  const count=document.getElementById('brazil-map-count');
  const note=document.getElementById('brazil-map-note');
@@ -12,7 +13,7 @@
  let report;
  let selected='';
  let hovered='';
- let loading=false;
+ let request=0;
 
  function color(value,maximum) {
   if(!value) return '#dbe7f1';
@@ -105,6 +106,14 @@
  canvas.addEventListener('pointerleave',()=>{hovered='';paint()});
  canvas.addEventListener('click',event=>{const shape=hit(event);if(shape) select(shape.uf)});
  stateSelect.addEventListener('change',()=>select(stateSelect.value));
+ statusSelect.addEventListener('change',()=>{
+  report=undefined;
+  ranking.replaceChildren();
+  showSelection();
+  paint();
+  note.textContent='Atualizando o mapa…';
+  void refresh();
+ });
  ranking.addEventListener('click',event=>{
   const button=event.target.closest('button[data-uf]');
   if(button) select(button.dataset.uf);
@@ -112,11 +121,15 @@
  new ResizeObserver(resize).observe(canvas);
 
  async function refresh() {
-  if(loading||location.protocol==='file:') return;
-  loading=true;
+  if(location.protocol==='file:') return;
+  const current=++request;
+  const status=statusSelect.value;
   try {
-   const response=await fetch('/api/soumaisblu/mapa',{cache:'no-store',signal:AbortSignal.timeout(5000)});
+   const query=new URLSearchParams({status});
+   const response=await fetch('/api/soumaisblu/mapa?'+query,{cache:'no-store',signal:AbortSignal.timeout(5000)});
+   if(!response.ok) throw new Error();
    const data=await response.json();
+   if(current!==request) return;
    if(data.updatedAt&&(!report||report.updatedAt!==data.updatedAt)) {
     report=data;
     ranking.replaceChildren(...data.states.filter(state=>state.count>0).slice(0,5).map(state=>{
@@ -142,9 +155,7 @@
    };
    note.textContent=messages[data.state]??messages.error;
   } catch {
-   note.textContent=report?'Exibindo a última distribuição recebida do Sou+BLU.':'Distribuição por estado indisponível.';
-  } finally {
-   loading=false;
+   if(current===request) note.textContent=report?'Exibindo a última distribuição recebida do Sou+BLU.':'Distribuição por estado indisponível.';
   }
  }
 

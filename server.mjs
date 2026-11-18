@@ -3,7 +3,7 @@ import { createServer } from 'node:http';
 import { loadSouMaisBluProposals, loadSellerPhotos, purchaseDebtReport } from './soumaisblu.mjs';
 import { productionGoals, saveProductionGoals } from './production-goals.mjs';
 import { purchaseDebtCsv } from './reports.mjs';
-import { proposalsByState } from './brazil-regions.mjs';
+import { geographyByStatus } from './brazil-regions.mjs';
 
 const { KONSIG_API_URL, KONSIG_API_TOKEN, PORT = '3000', PANEL_HOST = '127.0.0.1' } = process.env;
 const souMaisBluKey = process.env.SOUMAISBLU_API_KEY;
@@ -89,7 +89,7 @@ async function syncSellers() {
     } catch {
       console.error('Falha ao atualizar as fotos de perfil do Sou+BLU.');
     }
-    sellerSnapshot = { proposals, credit, geography: proposalsByState(proposals), updatedAt: new Date().toISOString() };
+    sellerSnapshot = { proposals, credit, geography: geographyByStatus(proposals), updatedAt: new Date().toISOString() };
     sellerSyncFailed = false;
   } catch {
     sellerSyncFailed = true;
@@ -133,8 +133,15 @@ createServer((request, response) => {
     response.writeHead(200, { 'Content-Type': asset.type }).end(asset.content);
   } else if (path === '/api/soumaisblu/mapa') {
     const state = !souMaisBluKey ? 'unconfigured' : sellerSyncFailed ? 'error' : sellerSnapshot ? 'ready' : 'pending';
+    const query = new URLSearchParams(request.url.split('?')[1]);
+    const status = query.get('status') ?? 'todas';
+    if (!['todas', 'digitadas', 'pagas', 'canceladas'].includes(status)) {
+      response.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' })
+        .end(JSON.stringify({ error: 'Status de proposta inválido.' }));
+      return;
+    }
     response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' })
-      .end(JSON.stringify({ state, updatedAt: sellerSnapshot?.updatedAt, ...sellerSnapshot?.geography }));
+      .end(JSON.stringify({ state, updatedAt: sellerSnapshot?.updatedAt, ...sellerSnapshot?.geography[status] }));
   } else if (path === '/api/soumaisblu/metas') {
     const seller = new URLSearchParams(request.url.split('?')[1]).get('seller') ?? '';
     response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' })

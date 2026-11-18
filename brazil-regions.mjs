@@ -39,3 +39,19 @@ export function proposalsByState(proposals) {
     unknown, total: proposals.length
   };
 }
+
+export function geographyByStatus(proposals) {
+  const groups = { digitadas: [], pagas: [], canceladas: [] };
+  for (const row of proposals) {
+    const status = normalize(row.status || row.operationStatus);
+    if (/\bCANCELAD[AO]S?\b/.test(status) || /\bCANCELAD[AO]S?\b/.test(normalize(row.operationStatus))) {
+      groups.canceladas.push(row);
+    } else if (row.paid) {
+      groups.pagas.push(row);
+    } else if (/\bDIGITAD[AO]S?\b/.test(status)) {
+      groups.digitadas.push(row);
+    }
+  }
+  return { todas: proposalsByState(proposals),
+    ...Object.fromEntries(Object.entries(groups).map(([key, rows]) => [key, proposalsByState(rows)])) };
+}
