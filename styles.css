@@ -101,14 +101,17 @@ select,input{font:inherit;font-size:12px;color:#33445a;background:#fff;border:1p
 .chart-fill--amber{background:#c68c23}
 .chart-fill--blue{background:#437fbc}
 @supports (appearance:base-select){
- :is(.seller-filter-grid,.goal-scope) select,:is(.seller-filter-grid,.goal-scope) select::picker(select){appearance:base-select}
- :is(.seller-filter-grid,.goal-scope) select::picker(select){margin-top:5px;padding:5px;border:1px solid #cbd9e6;border-radius:10px;background:#fff;box-shadow:0 8px 22px #102b4e22;color:var(--navy)}
+ :is(.seller-filter-grid,.goal-scope,.brazil-map-info) select,:is(.seller-filter-grid,.goal-scope,.brazil-map-info) select::picker(select){appearance:base-select}
+ :is(.seller-filter-grid,.goal-scope,.brazil-map-info) select::picker(select){margin-top:5px;padding:5px;border:1px solid #cbd9e6;border-radius:10px;background:#fff;box-shadow:0 8px 22px #102b4e22;color:var(--navy)}
  .goal-scope select::picker(select){max-height:min(320px,52vh);max-width:min(360px,calc(100vw - 24px));overflow-y:auto;scrollbar-width:thin;scrollbar-color:#648fa0 #e3edf3}
- :is(.seller-filter-grid,.goal-scope) select::picker-icon{color:var(--blue);margin-inline-start:auto}
- :is(.seller-filter-grid,.goal-scope) option{min-height:34px;padding:7px 9px;gap:8px;border-radius:6px;font-size:13px;white-space:normal;overflow-wrap:anywhere}
- :is(.seller-filter-grid,.goal-scope) option:checked{background:#e0f3f1;color:#075c60;font-weight:700}
- :is(.seller-filter-grid,.goal-scope) option:is(:hover,:focus-visible){background:#edf3f9}
- :is(.seller-filter-grid,.goal-scope) option::checkmark{color:var(--teal);order:1;margin-inline-start:auto}
+ :is(.seller-filter-grid,.goal-scope,.brazil-map-info) select::picker-icon{color:var(--blue);margin-inline-start:auto}
+ :is(.seller-filter-grid,.goal-scope,.brazil-map-info) option{min-height:34px;padding:7px 9px;gap:8px;border-radius:6px;font-size:13px;white-space:normal;overflow-wrap:anywhere}
+ :is(.seller-filter-grid,.goal-scope,.brazil-map-info) option:checked{background:#e0f3f1;color:#075c60;font-weight:700}
+ :is(.seller-filter-grid,.goal-scope,.brazil-map-info) option:is(:hover,:focus-visible){background:#edf3f9}
+ :is(.seller-filter-grid,.goal-scope,.brazil-map-info) option::checkmark{color:var(--teal);order:1;margin-inline-start:auto}
+ .brazil-map-info select::picker(select){max-height:min(300px,48vh);overflow:auto;scrollbar-width:thin;scrollbar-color:#7295b4 #eef5fb}
+ .brazil-map-info option:checked{background:#deebf8;color:#153f6a}
+ .brazil-map-info option::checkmark{color:#356b9c}
 }
 .kpi{border:0;border-radius:17px;padding:19px 20px 17px;box-shadow:0 10px 24px #18365319;position:relative;overflow:hidden;min-height:145px;color:#fff;isolation:isolate}
 .kpi:after{content:"";position:absolute;z-index:-1;right:-35px;top:-54px;width:155px;height:155px;border-radius:50%;background:#ffffff12;border:1px solid #ffffff20}
@@ -528,7 +531,8 @@ body.goal-tv{min-height:100vh;background:#102b4e}
 .brazil-map-gradient{width:min(33%,155px);height:8px;border-radius:999px;background:linear-gradient(90deg,#dcebf8,#104581)}
 .brazil-map-info{display:flex;flex-direction:column;gap:10px}
 .brazil-map-info label{display:grid;gap:5px;color:var(--navy);font-weight:750;font-size:12px}
-.brazil-map-info select{width:100%}
+.brazil-map-info select{width:100%;min-height:42px;border-color:#cbddec;background:#f8fbff;color:#164779;cursor:pointer}
+.brazil-map-info select:focus-visible{outline:2px solid #477dab;outline-offset:2px}
 .brazil-map-highlight{padding:11px 14px;border-radius:10px;background:#e5eff8;color:#164779}
 .brazil-map-highlight strong{display:block;font-size:clamp(23px,3vw,42px);line-height:1.05;font-variant-numeric:tabular-nums}
 .brazil-map-highlight :is(span,small){font-size:12px}

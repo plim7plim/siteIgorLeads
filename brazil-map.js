@@ -153,7 +153,7 @@
   .then(geo=>{
    states=geo.features;
    const names=states.map(feature=>feature.properties).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
-   stateSelect.append(...names.map(state=>new Option(state.name,state.uf)));
+   stateSelect.append(...names.map(state=>new Option(`${state.name} · ${state.uf}`,state.uf)));
    resize();
    void refresh();
    if(location.protocol==='file:') note.textContent='Abra o painel pelo servidor para consultar o Sou+BLU.';
